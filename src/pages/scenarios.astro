@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import ScenariosSection from '../components/ScenariosSection.astro';
+import '../styles/global.css';
+
+const title = '2027不同使用场景选梯攻略 - 追剧/AI/外贸/游戏/按量梯子推荐 | tizituijian2027.blog';
+const description = '根据 4K/8K 影视追剧、ChatGPT/Claude 科研学术、外贸跨境电商、外服游戏加速、轻度按量应急及校园网弱网环境精准挑选 2027 梯子。';
+const keywords = '场景选梯, ChatGPT梯子推荐, 4K追剧梯子, 游戏低延迟梯子, 不限时按量梯子, 外贸办公专线';
+
+const breadcrumbItems = [
+  { name: '场景选梯', url: '/scenarios/' },
+];
+---
+
+<BaseLayout title={title} description={description} keywords={keywords}>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumb items={breadcrumbItems} />
+
+    <header class="my-6 pb-6 border-b border-slate-200">
+      <span class="text-xs font-semibold uppercase tracking-wider text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200">
+        按需精准选梯
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mt-3">
+        不同使用场景下，如何挑选最适合您的 2027 梯子？
+      </h1>
+      <p class="text-slate-600 text-sm sm:text-base mt-3 max-w-3xl leading-relaxed">
+        并非盲目追求最贵套餐就是最佳方案。结合自身日常带宽消耗、IP 纯净度要求与运营商网络环境对号入座，才能用最合理的预算换取长期稳定的高速体验。
+      </p>
+    </header>
+
+    <ScenariosSection />
+
+    <!-- 避坑与选型自查清单 -->
+    <div class="mt-12 p-6 sm:p-8 rounded-2xl bg-slate-50 border border-slate-200 space-y-5">
+      <h2 class="text-xl sm:text-2xl font-bold text-slate-900">💡 2027 梯子选型避坑黄金 4 准则</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm text-slate-600">
+        <div class="p-4 rounded-xl bg-white border border-slate-200">
+          <strong class="text-slate-900 block mb-1">1. 优先核对晚高峰丢包而非凌晨测速</strong>
+          <span class="leading-relaxed">公网直连或劣质中转凌晨也能跑出百兆速率，一到晚上 21:00 立刻掉线；优先选择部署全 IEPL/IPLC 物理专线的服务商。</span>
+        </div>
+        <div class="p-4 rounded-xl bg-white border border-slate-200">
+          <strong class="text-slate-900 block mb-1">2. 用 AI 与外贸务必区分 IP 纯净度</strong>
+          <span class="leading-relaxed">高并发数据中心共享 IP 极易触发 ChatGPT、Claude 或 Amazon 风控；生产力用户应选择标注原生双 ISP 或住宅家宽出口的节点。</span>
+        </div>
+        <div class="p-4 rounded-xl bg-white border border-slate-200">
+          <strong class="text-slate-900 block mb-1">3. 新手建议先月付体验或备用按量套餐</strong>
+          <span class="leading-relaxed">哪怕榜单高分老牌机场，也强烈建议首购选择月付或季付试水三网实际延迟；轻度备用人群可搭配永久有效的不限时按量套餐防失联。</span>
+        </div>
+        <div class="p-4 rounded-xl bg-white border border-slate-200">
+          <strong class="text-slate-900 block mb-1">4. 坚决使用标准第三方开源客户端</strong>
+          <span class="leading-relaxed">支持 Clash Verge Rev、Sing-box、Shadowrocket 通用订阅链接的服务商才更安全可控，警惕只允许安装不明闭源黑盒 APP 的服务。</span>
+        </div>
+      </div>
+
+      <div class="pt-3 flex flex-wrap gap-3">
+        <a
+          href="/ranking/"
+          class="px-6 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white shadow-md shadow-sky-500/20 transition-all"
+        >
+          前往 2027 梯子总榜选型 →
+        </a>
+        <a
+          href="/posts/2027-tizi-tuijian-guide/"
+          class="px-6 py-2.5 rounded-xl font-bold text-sm bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 transition-colors"
+        >
+          阅读《2027 选购避坑全指南》 →
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

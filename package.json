@@ -1,0 +1,35 @@
+{
+  "name": "tizituijian2027-blog",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "2027梯子推荐 - 专注于2027最新稳定高速科学上网梯子、翻墙机场节点与客户端使用教程评测",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "serve": "node tools/serve.mjs",
+    "astro": "astro"
+  },
+  "keywords": [
+    "2027梯子推荐",
+    "梯子推荐",
+    "稳定梯子",
+    "高速翻墙梯子",
+    "科学上网梯子",
+    "电脑梯子",
+    "手机梯子",
+    "Clash梯子",
+    "Shadowrocket节点",
+    "tizituijian2027.blog"
+  ],
+  "author": "2027梯子推荐测评团队",
+  "license": "MIT",
+  "dependencies": {
+    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/tailwind": "^5.1.5",
+    "astro": "^5.3.0",
+    "tailwindcss": "^3.4.17"
+  }
+}

@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { SITE_CONFIG } from '../data/site';
+import '../styles/global.css';
+
+const breadcrumbItems = [
+  { name: '关于本站与实测原则', url: '/about/' },
+];
+
+const title = '关于本站与评测原则 | 2027梯子推荐';
+const description = '了解 2027梯子推荐 评测博客（tizituijian2027.blog）的宗旨、多地晚高峰网络实测标准、抗封锁测评方法及商业利益披露。';
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumb items={breadcrumbItems} />
+
+    <header class="my-6 pb-6 border-b border-slate-200">
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
+        关于我们与评测标准
+      </h1>
+      <p class="text-slate-600 text-sm sm:text-base mt-3">
+        把连接原理讲清楚，让每一个梯子推荐判断都有出处与真实数据支撑。
+      </p>
+    </header>
+
+    <div class="prose-custom max-w-none space-y-6">
+      <h2>1. 网站宗旨与定位</h2>
+      <p>
+        <strong>2027梯子推荐</strong>（<code>tizituijian2027.blog</code>）是由多位资深跨国网络工程师、外贸从业者与海外 AI 工具开发者联合创建的中立评测博客。
+      </p>
+      <p>
+        在过去的几年里，网络封锁策略与 GFW 深度包检测技术持续演进，大量充斥在网络上的廉价公网直连梯子、劣质中转节点频频发生断流、大面积超时乃至突然关站跑路。我们建立本站的目的，是为广大科研工作者、外贸跨境电商人员、流媒体爱好者及程序员群体提供一套<strong>客观、公开、经过长期真实晚高峰压测检验的梯子选购指南</strong>，帮助读者少走弯路、远离跑路陷阱。
+      </p>
+
+      <h2>2. 我们的多地晚高峰实测方法</h2>
+      <p>
+        为了确保评测数据的真实性与参考价值，本站所有推荐服务商均遵循以下严格评测约束：
+      </p>
+      <ul>
+        <li><strong>测试窗口标准化：</strong>重点采集中国内地 20:00 - 23:00 晚高峰黄金拥堵时段的连接速率、延迟与丢包率，绝不以凌晨闲时的虚高数据充当日常表现；</li>
+        <li><strong>多运营商网络覆盖：</strong>在电信 1000M、联通 1000M、移动 500M 三大主流宽带环境下分别部署探针并记录多轮测速中位数；</li>
+        <li><strong>流媒体与海外 AI 解锁验证：</strong>定期对 Netflix 4K、Disney+、YouTube Premium、ChatGPT 4o、Claude 3.5 等平台进行自动化解锁探测，记录 IP 纯净度等级；</li>
+        <li><strong>协议演进追踪：</strong>重点关注服务商对 Shadowsocks 2022、Trojan、Sing-box、Hysteria 2、TUIC 等新一代抗封锁协议的跟进速度与节点容灾能力。</li>
+      </ul>
+
+      <h2>3. 商业关系与透明度披露</h2>
+      <p>
+        维护探针服务器、订阅多地测试宽带及持续采购节点服务需要固定的日常运维成本。为了维持本站的长期独立运营，部分文章与推荐卡片中可能包含带有推荐标识的推广链接（Affiliate Links）。
+      </p>
+      <blockquote>
+        <strong>我们的承诺：</strong>商业关系绝不会影响我们对梯子性能的客观判断。对于存在虚标带宽、节点频繁超时、售后态度恶劣或存在跑路风险的服务商，无论其佣金比例多高，我们均坚决予以剔除或降权处理。
+      </blockquote>
+
+      <h2>4. 免责声明与合规提醒</h2>
+      <p>
+        本站所有技术评测、客户端配置指引及网络加速知识分享，仅供网络技术学术交流、跨国科研文献检索、合法合规跨境电商运营使用。请各位读者严格遵守所在地法律法规，文明安全上网，共同维护良好的网络环境。
+      </p>
+
+      <div class="mt-12 p-6 rounded-2xl glass-card border-sky-200 text-center">
+        <h3 class="text-xl font-bold text-slate-900 mb-2">欢迎交流与反馈</h3>
+        <p class="text-sm text-slate-600 max-w-lg mx-auto mb-4">
+          如果您在梯子使用过程中遇到节点异常、跑路线索或有优质的梯子服务商希望提交实测，欢迎关注本站持续更新。
+        </p>
+        <a
+          href="/ranking/"
+          class="inline-block px-6 py-2.5 rounded-xl font-bold text-sm bg-sky-500 hover:bg-sky-600 text-white transition-all shadow-md"
+        >
+          返回 2027 梯子推荐榜单 →
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,47 @@
+---
+export interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
+
+export interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+
+// 生成 BreadcrumbList Schema.org
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  'itemListElement': items.map((item, index) => ({
+    '@type': 'ListItem',
+    'position': index + 1,
+    'name': item.name,
+    'item': item.url.startsWith('http') ? item.url : `https://tizituijian2027.blog${item.url}`,
+  })),
+};
+---
+
+<nav aria-label="Breadcrumb" class="py-3 text-xs sm:text-sm text-slate-500">
+  <ol class="flex items-center flex-wrap gap-2">
+    <li>
+      <a href="/" class="hover:text-sky-600 transition-colors">首页</a>
+    </li>
+    {items.map((item, index) => {
+      const isLast = index === items.length - 1;
+      return (
+        <li class="flex items-center space-x-2">
+          <span class="text-slate-400">/</span>
+          {isLast ? (
+            <span class="text-sky-700 font-medium truncate max-w-xs sm:max-w-md">{item.name}</span>
+          ) : (
+            <a href={item.url} class="hover:text-sky-600 transition-colors">{item.name}</a>
+          )}
+        </li>
+      );
+    })}
+  </ol>
+</nav>
+
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />

@@ -1,0 +1,362 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { LADDERS_DATA } from '../../data/ladders';
+import type { LadderItem } from '../../data/ladders';
+import '../../styles/global.css';
+
+export async function getStaticPaths() {
+  return LADDERS_DATA.map((ladder) => ({
+    params: { id: ladder.id },
+    props: { ladder },
+  }));
+}
+
+export interface Props {
+  ladder: LadderItem;
+}
+
+const { ladder } = Astro.props;
+
+const hasCopyableCoupon = Boolean(
+  ladder.couponCode && !ladder.couponCode.includes('自带')
+);
+
+const title = `${ladder.name} 2027 详细评测与全套餐价格流量明细 (${ladder.packages.length}档方案) | 2027梯子推荐`;
+const description = `${ladder.name}完整评测与套餐推荐：${ladder.lineType}，起步${ladder.monthlyPrice}，基础流量${ladder.traffic}，${ladder.speed}，综合评分${ladder.rating}/5.0。收录全部${ladder.packages.length}档月付/年付及不限时按量套餐对比。`;
+const keywords = `${ladder.name}, ${ladder.name}怎么样, ${ladder.name}优惠码, ${ladder.name}价格流量, 2027梯子推荐, tizituijian2027.blog`;
+
+const breadcrumbItems = [
+  { name: '梯子推荐榜', url: '/ranking/' },
+  { name: `${ladder.name} 评测与套餐`, url: ladder.reviewSlug },
+];
+
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  'name': `${ladder.name} 科学上网梯子专线服务`,
+  'description': ladder.summary,
+  'aggregateRating': {
+    '@type': 'AggregateRating',
+    'ratingValue': ladder.rating,
+    'bestRating': '5.0',
+    'reviewCount': ladder.reviewsCount,
+  },
+  'offers': {
+    '@type': 'Offer',
+    'priceCurrency': 'CNY',
+    'price': (ladder.priceRaw || ladder.monthlyPrice).replace(/[^\d.]/g, '') || '20',
+    'availability': 'https://schema.org/InStock',
+    'url': ladder.affUrl,
+  },
+};
+---
+
+<BaseLayout title={title} description={description} keywords={keywords} schemaJson={productSchema}>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-12">
+    <Breadcrumb items={breadcrumbItems} />
+
+    <!-- 品牌总览大卡片 -->
+    <section class="bg-white rounded-2xl p-6 sm:p-8 relative overflow-hidden border border-sky-200 shadow-lg shadow-sky-500/5">
+      <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500"></div>
+
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div class="space-y-3 flex-1">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-200 text-xs font-black">
+              总榜第 #{ladder.rank} 名
+            </span>
+            <span class="px-2.5 py-1 rounded-full bg-sky-50 text-sky-700 border border-sky-200 text-xs font-semibold">
+              {ladder.badge}
+            </span>
+            <span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold">
+              在线率 {ladder.uptime}
+            </span>
+          </div>
+
+          <h1 class="text-2xl sm:text-4xl font-black text-slate-900">
+            {ladder.name} 详细评测与全套价格流量明细
+          </h1>
+
+          <p class="text-sm sm:text-base text-slate-600 leading-relaxed max-w-3xl">
+            {ladder.summary}
+          </p>
+
+          <div class="text-xs sm:text-sm text-slate-600">
+            <strong class="text-rose-600">🎯 最佳适用人群：</strong>
+            <span>{ladder.recommendedFor}</span>
+          </div>
+        </div>
+
+        <!-- 右侧快捷 CTA -->
+        <div class="lg:w-72 p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-3 shrink-0 text-center">
+          <div class="text-xs text-slate-500">起步特惠 · 支持多端</div>
+          <div class="text-3xl font-black text-sky-600 font-mono">{ladder.monthlyPrice}</div>
+          <div class="text-xs font-bold text-slate-700 bg-white py-1 px-2.5 rounded border border-slate-200">
+            📦 基础流量：{ladder.traffic}
+          </div>
+
+          {hasCopyableCoupon && (
+            <button
+              type="button"
+              class="w-full py-1.5 px-3 rounded-lg text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100 transition-colors"
+              data-copy-coupon={ladder.couponCode}
+              title="点击复制专属优惠码"
+            >
+              🎟️ 优惠码：{ladder.couponCode}（点击复制 📋）
+            </button>
+          )}
+
+          <a
+            href={ladder.affUrl}
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            class="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white shadow-md shadow-sky-500/20 transition-all block"
+          >
+            前往 {ladder.name} 官网开通 →
+          </a>
+        </div>
+      </div>
+
+      <!-- 关键评测指标栅格 -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-slate-100 text-xs">
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+          <div class="text-slate-500">综合评分</div>
+          <div class="text-sm sm:text-base font-extrabold text-amber-600 mt-0.5">★ {ladder.rating} / 5.0</div>
+          <div class="text-[11px] text-slate-500">{ladder.reviewsCount}+ 实测样本</div>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+          <div class="text-slate-500">专线架构</div>
+          <div class="text-sm font-bold text-sky-700 mt-0.5 truncate" title={ladder.lineType}>{ladder.lineType}</div>
+          <div class="text-[11px] text-slate-500">{ladder.latency}</div>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+          <div class="text-slate-500">测速性能</div>
+          <div class="text-sm font-bold text-emerald-600 mt-0.5">{ladder.speedMbps} Mbps · {ladder.speedRating}</div>
+          <div class="text-[11px] text-slate-500">{ladder.speed}</div>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+          <div class="text-slate-500">周期折扣 / 优势</div>
+          <div class="text-sm font-bold text-slate-800 mt-0.5 truncate" title={ladder.annualDiscount || '全节点 1x 真实倍率'}>
+            {ladder.annualDiscount || '支持月付 / 季付 / 年付'}
+          </div>
+          <div class="text-[11px] text-slate-500">{ladder.couponText || '官网直充即用'}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 优惠码独家提示横幅 -->
+    {ladder.couponText && (
+      <div class="p-4 sm:p-5 rounded-2xl bg-amber-50 border border-amber-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="text-xs sm:text-sm text-amber-900">
+          <strong class="font-bold">🎟️ 专属优惠提示：</strong>
+          <span>{ladder.couponText} —— 在官网结账页面输入优惠码即可直接享特惠立减！</span>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          {hasCopyableCoupon && (
+            <button
+              type="button"
+              class="px-4 py-2 rounded-xl text-xs font-bold bg-white text-amber-800 border border-amber-300 hover:bg-amber-100 transition-colors"
+              data-copy-coupon={ladder.couponCode}
+            >
+              复制优惠码：{ladder.couponCode}
+            </button>
+          )}
+          <a
+            href={ladder.affUrl}
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            class="px-4 py-2 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white transition-colors"
+          >
+            直达官网使用 →
+          </a>
+        </div>
+      </div>
+    )}
+
+    <!-- 完整套餐卡片矩阵 -->
+    <section class="space-y-6">
+      <div class="border-b border-slate-200 pb-4">
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900">
+          💰 {ladder.name} 价格配套与流量套餐明细（共 {ladder.packages.length} 档）
+        </h2>
+        <p class="text-slate-600 text-xs sm:text-sm mt-1">
+          涵盖周期月付/年付、大流量主力方案以及按量买断备份选项，所有参数均同步自官方最新资费。
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {ladder.packages.map((pkg) => (
+          <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                {pkg.badge && (
+                  <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-50 text-sky-700 border border-sky-200">
+                    {pkg.badge}
+                  </span>
+                )}
+                {pkg.available && (
+                  <span class="text-[11px] text-slate-500 font-medium">{pkg.available}</span>
+                )}
+              </div>
+
+              <h3 class="text-lg font-extrabold text-slate-900 mb-1.5">{pkg.name}</h3>
+              {pkg.subtitle && (
+                <p class="text-xs text-slate-600 leading-relaxed mb-4">{pkg.subtitle}</p>
+              )}
+
+              <!-- 价格与折后价 -->
+              <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 mb-4 space-y-1.5">
+                <div class="flex items-baseline justify-between">
+                  <span class="text-xs text-slate-500">官方标价</span>
+                  <span class="text-xl font-black text-sky-600 font-mono">{pkg.price}</span>
+                </div>
+                {pkg.discounted_price && (
+                  <div class="text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg">
+                    🏷️ {pkg.discounted_price}
+                  </div>
+                )}
+
+                <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200/80 text-center text-[11px]">
+                  <div>
+                    <div class="text-slate-500">流量</div>
+                    <div class="font-bold text-slate-900 mt-0.5">{pkg.traffic}</div>
+                  </div>
+                  <div>
+                    <div class="text-slate-500">速率</div>
+                    <div class="font-bold text-emerald-600 mt-0.5">{pkg.speed || '不限速'}</div>
+                  </div>
+                  <div>
+                    <div class="text-slate-500">设备数</div>
+                    <div class="font-bold text-slate-900 mt-0.5">{pkg.devices || '不限'}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 核心亮点 -->
+              <ul class="space-y-1.5 text-xs text-slate-600 mb-5">
+                {pkg.features.map((f) => (
+                  <li class="flex items-start gap-1.5 leading-relaxed">
+                    <span class="text-emerald-500 font-bold shrink-0 mt-0.5">✓</span>
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <a
+              href={ladder.affUrl}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              class="w-full py-2.5 px-4 rounded-xl text-center font-bold text-xs sm:text-sm bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white shadow-sm shadow-sky-500/20 transition-all block"
+            >
+              立即订阅此套餐 →
+            </a>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 全套餐详细参数对比总表 -->
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-black text-slate-900">
+        📋 全 {ladder.packages.length} 档套餐详细参数对比总表
+      </h2>
+      <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+          <thead>
+            <tr class="bg-slate-50 border-b border-slate-200 text-slate-700 font-semibold">
+              <th class="p-4 whitespace-nowrap">套餐名称</th>
+              <th class="p-4 whitespace-nowrap">流量规格</th>
+              <th class="p-4 whitespace-nowrap">官方标价</th>
+              <th class="p-4 whitespace-nowrap">折后 / 周期特惠</th>
+              <th class="p-4 whitespace-nowrap">设备数</th>
+              <th class="p-4">核心亮点</th>
+              <th class="p-4 text-center whitespace-nowrap">开通入口</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200">
+            {ladder.packages.map((pkg) => (
+              <tr class="hover:bg-sky-50/40 transition-colors">
+                <td class="p-4 font-bold text-slate-900 whitespace-nowrap">{pkg.name}</td>
+                <td class="p-4 font-semibold text-slate-800 whitespace-nowrap">{pkg.traffic}</td>
+                <td class="p-4 font-mono font-bold text-sky-600 whitespace-nowrap">{pkg.price}</td>
+                <td class="p-4 text-amber-700 font-medium whitespace-nowrap">{pkg.discounted_price || pkg.available || '-'}</td>
+                <td class="p-4 text-slate-600 whitespace-nowrap">{pkg.devices || '不限'}</td>
+                <td class="p-4 text-slate-600 max-w-md">{pkg.features.slice(0, 2).join('；')}</td>
+                <td class="p-4 text-center whitespace-nowrap">
+                  <a
+                    href={ladder.affUrl}
+                    target="_blank"
+                    rel="noopener noreferrer sponsored"
+                    class="inline-block px-3 py-1 rounded-lg bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs transition-colors"
+                  >
+                    选购 →
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 为什么推荐 + 流媒体/AI解锁 + 客户端兼容 -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="glass-card rounded-2xl p-6 space-y-3">
+        <h3 class="text-lg font-extrabold text-slate-900">🔍 为什么推荐 {ladder.name}？</h3>
+        <ol class="space-y-2 text-xs sm:text-sm text-slate-600">
+          {ladder.features.map((feat, idx) => (
+            <li class="flex items-start gap-2">
+              <span class="w-5 h-5 rounded-full bg-sky-50 text-sky-700 border border-sky-200 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                {idx + 1}
+              </span>
+              <span>{feat}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div class="glass-card rounded-2xl p-6 space-y-3">
+        <h3 class="text-lg font-extrabold text-slate-900">🎬 流媒体与 AI 解锁实测</h3>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          经由 Clash Verge Rev 真实节点探测，{ladder.name} 在以下平台均支持无障碍原生解锁：
+        </p>
+        <div class="flex flex-wrap gap-2">
+          {ladder.streamingUnlock.map((tag) => (
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold">
+              ✓ {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-6 space-y-3">
+        <h3 class="text-lg font-extrabold text-slate-900">⚡ 协议支持与客户端兼容</h3>
+        <div class="space-y-2 text-xs">
+          <div class="text-slate-500 font-medium">支持协议：</div>
+          <div class="flex flex-wrap gap-1.5">
+            {ladder.protocols.map((p) => (
+              <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 font-mono">{p}</span>
+            ))}
+          </div>
+          <div class="text-slate-500 font-medium pt-2">官方推荐兼容客户端：</div>
+          <div class="flex flex-wrap gap-1.5">
+            {ladder.supportedClients.map((c) => (
+              <span class="px-2 py-0.5 rounded bg-sky-50 text-sky-700 border border-sky-200 font-medium">⚡ {c}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="flex flex-wrap justify-between items-center gap-4 pt-6 border-t border-slate-200">
+      <a href="/ranking/" class="text-sm font-bold text-sky-600 hover:text-sky-700">
+        ← 返回 2027 梯子推荐总榜单
+      </a>
+      <a href="/comparison/" class="text-sm font-bold text-slate-600 hover:text-sky-600">
+        横向对比全网 35 款参数 →
+      </a>
+    </div>
+  </div>
+</BaseLayout>

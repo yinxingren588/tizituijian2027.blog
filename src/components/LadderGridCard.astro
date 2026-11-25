@@ -1,0 +1,185 @@
+---
+import type { LadderItem } from '../data/ladders';
+
+export interface Props {
+  ladder: LadderItem;
+}
+
+const { ladder } = Astro.props;
+
+const isTop2 = ladder.rank === 2;
+const isTop3 = ladder.rank === 3;
+
+const speedPercentage = Math.min(100, Math.round((ladder.speedMbps / 1000) * 100));
+
+const cleanBadge = ladder.badge
+  ? ladder.badge.replace(/^[👑⚡💰🧳💼]\s*/, '')
+  : ladder.categoryLabel;
+
+// 识别是否为实际优惠券码（区别于"官方自带周期折扣"等说明性文字）
+const hasCopyableCoupon = Boolean(
+  ladder.couponCode && !ladder.couponCode.includes('自带')
+);
+---
+
+<article
+  class="ladder-item-card bg-white rounded-xl p-3.5 sm:p-4 flex flex-col justify-between relative overflow-hidden border border-slate-200 shadow-sm hover:border-sky-400 hover:shadow-lg hover:shadow-sky-500/10 transition-all duration-200 group"
+  data-ladder-card
+  data-category={ladder.category}
+  data-name={ladder.name.toLowerCase()}
+  data-keywords={`${ladder.name} ${ladder.categoryLabel} ${ladder.protocols.join(' ')} ${ladder.lineType} ${ladder.features.join(' ')} ${ladder.streamingUnlock.join(' ')} ${ladder.traffic} ${ladder.monthlyPrice} ${ladder.annualDiscount || ''}`.toLowerCase()}
+>
+  <!-- 顶部细微高亮饰条 -->
+  <div class="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-400 opacity-70 group-hover:opacity-100 transition-opacity"></div>
+
+  <div>
+    <!-- 顶部状态栏：排名徽章、星级评分与专线徽章 -->
+    <div class="flex items-center justify-between gap-1 mb-2 pt-0.5">
+      <div class="flex items-center gap-1.5">
+        <span
+          class={`w-6 h-6 rounded-md flex items-center justify-center font-black text-xs shrink-0 ${
+            isTop2
+              ? 'bg-slate-800 text-white shadow-sm'
+              : isTop3
+              ? 'bg-amber-600 text-white shadow-sm'
+              : 'bg-slate-100 text-slate-700 border border-slate-200 font-bold'
+          }`}
+        >
+          #{ladder.rank}
+        </span>
+        <span class="text-amber-500 text-xs font-bold flex items-center gap-0.5 font-mono">
+          <span>★</span><span class="text-slate-700">{ladder.rating}</span>
+        </span>
+      </div>
+
+      <span
+        class="text-[10px] px-2 py-0.5 rounded-full font-semibold truncate max-w-[105px] bg-sky-50 text-sky-700 border border-sky-200"
+        title={cleanBadge}
+      >
+        {cleanBadge}
+      </span>
+    </div>
+
+    <!-- 品牌名称 -->
+    <h3
+      class="text-sm sm:text-base font-extrabold text-slate-900 group-hover:text-sky-600 transition-colors truncate mb-2 block"
+      title={ladder.name}
+    >
+      <a href={ladder.affUrl} target="_blank" rel="noopener noreferrer sponsored">
+        {ladder.name}
+      </a>
+    </h3>
+
+    <!-- 流量 + 速率 + 线路架构核心信息框 -->
+    <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80 mb-2.5 space-y-1.5 text-[11px]">
+      <!-- 流量规格重点突出 -->
+      <div class="flex items-center justify-between gap-1 pb-1 border-b border-slate-200/70">
+        <span class="text-slate-500 shrink-0">流量:</span>
+        <span class="font-bold text-slate-800 truncate" title={ladder.traffic}>
+          {ladder.traffic}
+        </span>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <span class="text-slate-500">{ladder.speedRating}:</span>
+        <span class="font-extrabold text-sky-600 font-mono text-xs">
+          {ladder.speedMbps} Mbps
+        </span>
+      </div>
+
+      <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+        <div
+          class="bg-gradient-to-r from-sky-500 to-emerald-500 h-full rounded-full"
+          style={`width: ${speedPercentage}%;`}
+        ></div>
+      </div>
+
+      <div class="flex items-center justify-between text-slate-500 text-[10px] pt-0.5">
+        <span class="truncate max-w-[125px]" title={ladder.lineType}>
+          {ladder.lineType.split('/')[0].trim()}
+        </span>
+        <span class="text-emerald-600 font-semibold shrink-0">{ladder.uptime}</span>
+      </div>
+    </div>
+
+    <!-- 核心优势（展示前 2 条完整可读亮点 + 原生解锁） -->
+    <div class="space-y-1.5 mb-2.5 text-[11px] text-slate-600">
+      <div class="flex items-start gap-1 leading-snug" title={ladder.features[0]}>
+        <span class="text-emerald-500 font-bold shrink-0">✓</span>
+        <span class="line-clamp-2">{ladder.features[0]}</span>
+      </div>
+      {ladder.features[1] && (
+        <div class="flex items-start gap-1 leading-snug text-slate-500" title={ladder.features[1]}>
+          <span class="text-sky-500 font-bold shrink-0">✓</span>
+          <span class="line-clamp-2">{ladder.features[1]}</span>
+        </div>
+      )}
+    </div>
+
+    <!-- 解锁 + 协议标签 -->
+    <div class="flex flex-wrap gap-1 mb-2.5">
+      <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium">
+        {ladder.streamingUnlock.slice(0, 2).join('/')}
+      </span>
+      {ladder.protocols.slice(0, 2).map((proto) => (
+        <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 font-mono">
+          {proto === 'Shadowsocks' ? 'SS' : proto === 'Hysteria 2' ? 'Hys2' : proto}
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <!-- 卡片底部：价钱、年付/优惠码与双按钮（官网直达 + 套餐详情页） -->
+  <div class="pt-2.5 border-t border-slate-100 space-y-2">
+    <div class="flex items-end justify-between gap-1">
+      <div>
+        <div class="text-[10px] text-slate-500">起步特惠</div>
+        <div class="text-sky-600 font-black text-base font-mono leading-none mt-0.5">
+          {ladder.priceRaw || ladder.monthlyPrice.replace('/月起', '')}
+          <span class="text-[10px] font-normal text-slate-500">/月起</span>
+        </div>
+      </div>
+
+      {hasCopyableCoupon ? (
+        <button
+          type="button"
+          class="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 transition-colors flex items-center gap-0.5 font-medium shrink-0"
+          data-copy-coupon={ladder.couponCode}
+          title={ladder.couponText || `点击复制优惠码: ${ladder.couponCode}`}
+        >
+          <span>券:{ladder.couponCode}</span>
+          <span>📋</span>
+        </button>
+      ) : ladder.couponCode ? (
+        <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 font-medium truncate max-w-[85px]" title={ladder.couponCode}>
+          周期折
+        </span>
+      ) : null}
+    </div>
+
+    {ladder.annualDiscount && (
+      <div class="text-[10px] text-amber-700 bg-amber-50/70 border border-amber-200/70 rounded px-1.5 py-0.5 truncate" title={ladder.annualDiscount}>
+        🏷️ {ladder.annualDiscount}
+      </div>
+    )}
+
+    <div class="space-y-1.5">
+      <a
+        href={ladder.affUrl}
+        target="_blank"
+        rel="noopener noreferrer sponsored"
+        class="w-full py-1.5 px-2 rounded-lg text-center font-bold text-xs bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white shadow-sm shadow-sky-500/20 transition-all flex items-center justify-center gap-1 group-hover:scale-[1.02]"
+      >
+        <span>直达官网开通</span>
+        <span>→</span>
+      </a>
+
+      <a
+        href={ladder.reviewSlug}
+        class="w-full py-1 px-2 rounded-lg text-center font-semibold text-[11px] text-sky-700 hover:text-sky-800 bg-sky-50/80 hover:bg-sky-100 border border-sky-200/80 transition-colors block"
+      >
+        查看 {ladder.packages.length} 档完整套餐 →
+      </a>
+    </div>
+  </div>
+</article>

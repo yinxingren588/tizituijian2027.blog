@@ -1,0 +1,107 @@
+---
+import SeoHead from '../components/SeoHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  keywords?: string;
+  canonicalUrl?: string;
+  ogType?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  articleAuthor?: string;
+  schemaJson?: Record<string, any> | Record<string, any>[];
+}
+
+const {
+  title,
+  description,
+  keywords,
+  canonicalUrl,
+  ogType = 'website',
+  publishedTime,
+  modifiedTime,
+  articleAuthor,
+  schemaJson,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <SeoHead
+      title={title}
+      description={description}
+      keywords={keywords}
+      canonicalUrl={canonicalUrl}
+      ogType={ogType}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      articleAuthor={articleAuthor}
+      schemaJson={schemaJson}
+    />
+  </head>
+  <body class="bg-white text-slate-800 flex flex-col min-h-screen">
+    <!-- 无障碍直接跳转 -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:p-4 focus:bg-sky-600 focus:text-white">
+      跳转至主要内容
+    </a>
+
+    <!-- 顶部全局导航 -->
+    <Header />
+
+    <!-- 页面核心内容区域 -->
+    <main id="main-content" class="flex-grow">
+      <slot />
+    </main>
+
+    <!-- 底部全局版权与合规信息 -->
+    <Footer />
+
+    <!-- 全局轻量交互脚本：优惠码复制与浮动提示 -->
+    <script is:inline>
+      document.addEventListener('DOMContentLoaded', () => {
+        // 绑定优惠码一键复制
+        document.querySelectorAll('[data-copy-coupon]').forEach((btn) => {
+          btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const code = btn.getAttribute('data-copy-coupon');
+            if (!code) return;
+            try {
+              await navigator.clipboard.writeText(code);
+              showCopyToast(`🎉 优惠码 ${code} 已复制到剪贴板！`);
+            } catch (err) {
+              // 兼容老旧环境复制
+              const input = document.createElement('input');
+              input.value = code;
+              document.body.appendChild(input);
+              input.select();
+              document.execCommand('copy');
+              document.body.removeChild(input);
+              showCopyToast(`🎉 优惠码 ${code} 已复制！`);
+            }
+          });
+        });
+
+        function showCopyToast(message) {
+          const old = document.querySelector('.copy-toast');
+          if (old) old.remove();
+
+          const toast = document.createElement('div');
+          toast.className = 'copy-toast';
+          toast.innerText = message;
+          document.body.appendChild(toast);
+
+          setTimeout(() => {
+            if (toast.parentNode) {
+              toast.parentNode.removeChild(toast);
+            }
+          }, 2600);
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,104 @@
+---
+// 主流开源 Clash / 代理客户端官方下载矩阵（源自官方 Releases 与 App Store）
+const clients = [
+  {
+    icon: '🪟',
+    name: 'Clash Verge Rev',
+    platform: 'Windows 强烈推荐',
+    badgeColor: 'bg-sky-50 text-sky-700 border-sky-200',
+    desc: '目前 Windows 平台最主流、更新最频繁的 Clash 客户端，内置 Mihomo 内核，支持原生 TUN 模式与中文界面。',
+    downloadUrl: 'https://github.com/clash-verge-rev/clash-verge-rev/releases/latest',
+    tutorialUrl: '/clients/',
+    tip: '下载 x64-setup.exe 安装程序',
+  },
+  {
+    icon: '🎉',
+    name: 'Mihomo Party',
+    platform: 'Windows 跨平台高颜值',
+    badgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+    desc: '颜值极高的跨平台代理客户端，拥有现代化设计、内置丰富分流规则集与轻量化开销，开箱即用。',
+    downloadUrl: 'https://github.com/mihomo-party-org/mihomo-party/releases/latest',
+    tutorialUrl: '/posts/windows-mac-ios-android-tizi-tutorial/',
+    tip: '内置预设规则集，新手友好',
+  },
+  {
+    icon: '🍏',
+    name: 'Clash Verge Rev',
+    platform: 'macOS 强烈推荐',
+    badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    desc: '完美适配 Apple Silicon M1/M2/M3/M4 系列芯片与 Intel 架构，原生支持 macOS 系统代理与 TUN 全局加速。',
+    downloadUrl: 'https://github.com/clash-verge-rev/clash-verge-rev/releases/latest',
+    tutorialUrl: '/clients/',
+    tip: 'M系列选 aarch64.dmg，Intel 选 x64.dmg',
+  },
+  {
+    icon: '🤖',
+    name: 'Clash Meta for Android',
+    platform: 'Android 强烈推荐',
+    badgeColor: 'bg-green-50 text-green-700 border-green-200',
+    desc: '安卓端功能最完善的开源代理工具（CMFA），支持分应用代理、分流规则配置，鸿蒙与澎湃完美兼容。',
+    downloadUrl: 'https://github.com/MetaCubeX/ClashMetaForAndroid/releases/latest',
+    tutorialUrl: '/posts/windows-mac-ios-android-tizi-tutorial/',
+    tip: '完全开源免费，直接下载 APK',
+  },
+  {
+    icon: '🚀',
+    name: 'Shadowrocket (小火箭)',
+    platform: 'iOS 经典神器',
+    badgeColor: 'bg-purple-50 text-purple-700 border-purple-200',
+    desc: 'iPhone / iPad 平台最经典的科学上网神器（美区 App Store 售价 $2.99），支持一键扫码或链接订阅导入。',
+    downloadUrl: 'https://apps.apple.com/us/app/shadowrocket/id932747118',
+    tutorialUrl: '/posts/windows-mac-ios-android-tizi-tutorial/',
+    tip: '需使用海外 Apple ID 下载安装',
+  },
+  {
+    icon: '📦',
+    name: 'Sing-box',
+    platform: 'Linux / 全平台极客推荐',
+    badgeColor: 'bg-amber-50 text-amber-700 border-amber-200',
+    desc: '新一代超轻量级通用代理核心，资源占用极低，支持 Hysteria2 / VLESS / TUIC 多协议灵活路由。',
+    downloadUrl: 'https://github.com/SagerNet/sing-box/releases/latest',
+    tutorialUrl: '/posts/windows-mac-ios-android-tizi-tutorial/',
+    tip: '多协议性能强劲，支持服务端与客户端',
+  },
+];
+---
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  {clients.map((c) => (
+    <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between gap-2 mb-3">
+          <div class="text-3xl">{c.icon}</div>
+          <span class={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${c.badgeColor}`}>
+            {c.platform}
+          </span>
+        </div>
+        <h3 class="text-lg font-extrabold text-slate-900 mb-2">{c.name}</h3>
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-3">
+          {c.desc}
+        </p>
+        <div class="text-[11px] text-slate-500 bg-slate-50 border border-slate-200/80 px-2.5 py-1 rounded-md mb-4">
+          💡 {c.tip}
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 pt-3 border-t border-slate-100">
+        <a
+          href={c.downloadUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex-1 py-2 px-3 rounded-lg text-center font-bold text-xs bg-sky-500 hover:bg-sky-600 text-white shadow-sm shadow-sky-500/20 transition-colors"
+        >
+          官方下载 ↓
+        </a>
+        <a
+          href={c.tutorialUrl}
+          class="py-2 px-3 rounded-lg text-center font-semibold text-xs bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 transition-colors"
+        >
+          配置教程
+        </a>
+      </div>
+    </div>
+  ))}
+</div>

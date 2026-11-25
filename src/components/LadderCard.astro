@@ -1,0 +1,176 @@
+---
+import type { LadderItem } from '../data/ladders';
+
+export interface Props {
+  ladder: LadderItem;
+}
+
+const { ladder } = Astro.props;
+
+// 针对前三名使用特殊金色/银色/青色高亮边框与徽章
+const isTop1 = ladder.rank === 1;
+const isTop2 = ladder.rank === 2;
+const isTop3 = ladder.rank === 3;
+
+// 测速评分换算为百分比条 (以 1000Mbps 为基准)
+const speedPercentage = Math.min(100, Math.round((ladder.speedMbps / 1000) * 100));
+---
+
+<article
+  class={`ladder-item-card glass-card rounded-2xl p-6 sm:p-8 relative overflow-hidden transition-all duration-300 ${
+    isTop1
+      ? 'border-sky-500/50 shadow-xl shadow-sky-500/10'
+      : 'border-slate-800 hover:border-slate-700'
+  }`}
+  data-ladder-card
+  data-category={ladder.category}
+  data-name={ladder.name.toLowerCase()}
+  data-keywords={`${ladder.name} ${ladder.categoryLabel} ${ladder.protocols.join(' ')} ${ladder.lineType} ${ladder.features.join(' ')} ${ladder.streamingUnlock.join(' ')}`.toLowerCase()}
+>
+  <!-- 排名与推荐标签 -->
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+    <div class="flex items-center space-x-3">
+      <span class={`w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm shrink-0 ${
+        isTop1
+          ? 'bg-gradient-to-r from-amber-400 to-amber-600 text-slate-950 shadow-md shadow-amber-500/30'
+          : isTop2
+          ? 'bg-gradient-to-r from-slate-200 to-slate-400 text-slate-950'
+          : isTop3
+          ? 'bg-gradient-to-r from-amber-700 to-amber-800 text-white'
+          : 'bg-slate-800 text-slate-300'
+      }`}>
+        #{ladder.rank}
+      </span>
+      <div>
+        <h3 class="text-xl sm:text-2xl font-black text-white hover:text-sky-400 transition-colors">
+          <a href={ladder.affUrl} target="_blank" rel="noopener noreferrer sponsored">
+            {ladder.name}
+          </a>
+        </h3>
+        <span class="inline-block mt-0.5 text-xs text-sky-400/90 font-medium">
+          {ladder.categoryLabel} · 评分 {ladder.rating}/5.0 ({ladder.reviewsCount}+条真实用户评价)
+        </span>
+      </div>
+    </div>
+
+    <!-- 荣誉勋章与用户评分 -->
+    <div class="flex items-center gap-2">
+      <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold gradient-badge">
+        <span class="mr-1.5">🏆</span>
+        <span>{ladder.badge}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 核心指标状态栏 (测速、延迟、专线) -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 p-3.5 rounded-xl bg-slate-900/80 border border-slate-800/80 mb-5">
+    <div>
+      <div class="text-xs text-slate-400">实测最高带宽</div>
+      <div class="text-sm sm:text-base font-bold text-white mt-0.5">{ladder.speed}</div>
+      <!-- 动态测速条 -->
+      <div class="w-full bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
+        <div class="bg-gradient-to-r from-sky-500 to-emerald-400 h-full rounded-full" style={`width: ${speedPercentage}%;`}></div>
+      </div>
+    </div>
+    <div>
+      <div class="text-xs text-slate-400">晚高峰测速 / 延迟</div>
+      <div class="text-sm sm:text-base font-bold text-emerald-400 mt-0.5">
+        {ladder.speedMbps} Mbps <span class="text-xs text-slate-400 font-normal">({ladder.latency})</span>
+      </div>
+      <div class="text-[11px] text-slate-400 mt-1.5">
+        晚高峰丢包率 &lt; 1%
+      </div>
+    </div>
+    <div class="col-span-2 sm:col-span-1">
+      <div class="text-xs text-slate-400">线路架构</div>
+      <div class="text-sm font-semibold text-sky-300 truncate mt-0.5" title={ladder.lineType}>
+        {ladder.lineType}
+      </div>
+      <div class="text-[11px] text-emerald-400/80 mt-1.5 flex items-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>端到端不过GFW公网</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 梯子简介与测评总结 -->
+  <p class="text-sm text-slate-300 leading-relaxed mb-4">
+    {ladder.summary}
+  </p>
+
+  <!-- 特性亮点清单 -->
+  <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-6">
+    {ladder.features.map((feature) => (
+      <li class="flex items-start text-xs sm:text-sm text-slate-300">
+        <svg class="w-4 h-4 text-sky-400 mr-2 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>{feature}</span>
+      </li>
+    ))}
+  </ul>
+
+  <!-- 协议支持与流媒体解锁标签 -->
+  <div class="space-y-3 pt-4 border-t border-slate-800/80 mb-6">
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="text-xs text-slate-400 font-medium">支持协议:</span>
+      {ladder.protocols.map((proto) => (
+        <span class="px-2 py-0.5 rounded text-xs bg-slate-800 text-sky-300 border border-slate-700 font-mono">
+          {proto}
+        </span>
+      ))}
+      <span class="text-xs text-slate-400 ml-2 font-medium">全平台客户端:</span>
+      <span class="px-2 py-0.5 rounded text-xs bg-slate-800/60 text-slate-300 border border-slate-700/60 font-mono">
+        Windows / Mac / iOS / Android
+      </span>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="text-xs text-slate-400 font-medium">流媒体/AI解锁:</span>
+      {ladder.streamingUnlock.map((tag) => (
+        <span class="px-2 py-0.5 rounded text-xs bg-slate-800/80 text-emerald-300 border border-emerald-900/40">
+          {tag}
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <!-- 价格与行动栏 -->
+  <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-4 border-t border-slate-800/80 bg-slate-900/40 -mx-6 -mb-6 sm:-mx-8 sm:-mb-8 p-6 sm:p-8 rounded-b-2xl">
+    <div>
+      <div class="text-xs text-slate-400">参考起步资费 / 流量规格</div>
+      <div class="text-xl sm:text-2xl font-black text-amber-400 mt-0.5">
+        {ladder.monthlyPrice}
+      </div>
+      <div class="text-xs text-slate-400 mt-0.5">{ladder.traffic}</div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-3">
+      {ladder.couponCode && (
+        <button
+          type="button"
+          class="px-3.5 py-2.5 rounded-xl text-xs font-bold bg-slate-800 text-amber-300 border border-amber-500/30 hover:bg-slate-700 transition-colors flex items-center space-x-1"
+          data-copy-coupon={ladder.couponCode}
+          title="点击复制优惠码"
+        >
+          <span>📋 码: {ladder.couponCode}</span>
+        </button>
+      )}
+
+      <a
+        href={ladder.reviewSlug}
+        class="px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors"
+      >
+        详细测评
+      </a>
+
+      <a
+        href={ladder.affUrl}
+        target="_blank"
+        rel="noopener noreferrer sponsored"
+        class="flex-1 sm:flex-initial px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-center bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white shadow-lg shadow-sky-500/20 transition-all hover:scale-105"
+      >
+        直达梯子官网 →
+      </a>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,146 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { SITE_CONFIG } from '../data/site';
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  author?: string;
+  tags?: string[];
+  canonicalUrl?: string;
+}
+
+const {
+  title,
+  description,
+  pubDate,
+  updatedDate,
+  author = SITE_CONFIG.author,
+  tags = [],
+  canonicalUrl,
+} = Astro.props;
+
+const isoPubDate = pubDate.toISOString();
+const isoModDate = (updatedDate || pubDate).toISOString();
+const displayPubDate = pubDate.toISOString().split('T')[0];
+const displayModDate = (updatedDate || pubDate).toISOString().split('T')[0];
+
+const pageUrl = canonicalUrl || Astro.url.href;
+
+// 针对 Bing 和 Google 的 Article 结构化数据 (BlogPosting)
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  'headline': title,
+  'description': description,
+  'inLanguage': 'zh-CN',
+  'mainEntityOfPage': {
+    '@type': 'WebPage',
+    '@id': pageUrl,
+  },
+  'datePublished': isoPubDate,
+  'dateModified': isoModDate,
+  'author': {
+    '@type': 'Organization',
+    'name': author,
+    'url': SITE_CONFIG.url,
+  },
+  'publisher': {
+    '@type': 'Organization',
+    'name': SITE_CONFIG.name,
+    'url': SITE_CONFIG.url,
+    'logo': {
+      '@type': 'ImageObject',
+      'url': `${SITE_CONFIG.url}/favicon.svg`,
+    },
+  },
+  'keywords': tags.join(', '),
+};
+
+const breadcrumbItems = [
+  { name: '评测文章', url: '/posts/' },
+  { name: title, url: pageUrl },
+];
+---
+
+<BaseLayout
+  title={`${title} | ${SITE_CONFIG.name}`}
+  description={description}
+  keywords={tags.join(', ') + `, ${SITE_CONFIG.keywords}`}
+  ogType="article"
+  publishedTime={isoPubDate}
+  modifiedTime={isoModDate}
+  articleAuthor={author}
+  schemaJson={articleSchema}
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <!-- 面包屑导航 -->
+    <Breadcrumb items={breadcrumbItems} />
+
+    <!-- 文章头部 -->
+    <header class="my-6 pb-6 border-b border-slate-200">
+      <div class="flex flex-wrap items-center gap-2 mb-4">
+        {tags.map((tag) => (
+          <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-200">
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-4">
+        {title}
+      </h1>
+
+      <div class="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-slate-500">
+        <span class="flex items-center space-x-1">
+          <span>✍️ 作者：</span>
+          <strong class="text-slate-800">{author}</strong>
+        </span>
+        <span>•</span>
+        <span class="flex items-center space-x-1">
+          <span>📅 发布于：</span>
+          <time datetime={isoPubDate}>{displayPubDate}</time>
+        </span>
+        {updatedDate && (
+          <>
+            <span>•</span>
+            <span class="flex items-center space-x-1 text-sky-600">
+              <span>🔄 最近更新：</span>
+              <time datetime={isoModDate}>{displayModDate}</time>
+            </span>
+          </>
+        )}
+      </div>
+    </header>
+
+    <!-- 文章正文 (Markdown 渲染区域) -->
+    <article class="prose-custom max-w-none">
+      <slot />
+    </article>
+
+    <!-- 文章底部作者声明与推荐 CTA -->
+    <div class="mt-12 p-6 sm:p-8 rounded-2xl glass-panel border border-sky-200 text-center space-y-4">
+      <div class="inline-flex items-center space-x-2 text-xs font-semibold text-sky-700 bg-sky-50 px-3 py-1 rounded-full border border-sky-200">
+        <span>🚀 2027 优质梯子即刻开启</span>
+      </div>
+      <h3 class="text-xl sm:text-2xl font-bold text-slate-900">
+        寻找晚高峰不卡顿、4K秒开的高速稳定梯子？
+      </h3>
+      <p class="text-sm text-slate-600 max-w-xl mx-auto">
+        欢迎查阅我们多地网络深度压测的《2027梯子推荐榜单》，全IEPL内网专线支持，无视网络封锁，支持ChatGPT与海外流媒体解锁。
+      </p>
+      <div class="pt-2">
+        <a
+          href="/ranking/"
+          class="inline-block px-6 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white shadow-lg shadow-sky-500/20 transition-transform hover:scale-105"
+        >
+          查看 2027 梯子推荐排行榜 →
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

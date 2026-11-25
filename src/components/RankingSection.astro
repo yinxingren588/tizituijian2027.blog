@@ -1,0 +1,188 @@
+---
+import LadderFeaturedCard from './LadderFeaturedCard.astro';
+import LadderGridCard from './LadderGridCard.astro';
+import { LADDERS_DATA } from '../data/ladders';
+
+// 分离总榜第一名旗舰（隐形人）与其余精选品牌
+const top1Ladder = LADDERS_DATA.find((item) => item.rank === 1) || LADDERS_DATA[0];
+const otherLadders = LADDERS_DATA.filter((item) => item.rank !== 1);
+---
+
+<!-- 分类标签筛选与搜索交互栏 -->
+<div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm mb-8 space-y-4">
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+    <!-- 分类筛选按钮组 -->
+    <div class="flex flex-wrap items-center gap-2" id="category-filter-tabs">
+      <button
+        type="button"
+        class="ladder-tab-btn active px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-sky-500 text-white shadow-md shadow-sky-500/20"
+        data-filter="all"
+      >
+        全部梯子 ({LADDERS_DATA.length})
+      </button>
+      <button
+        type="button"
+        class="ladder-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:text-slate-900 hover:bg-slate-50"
+        data-filter="flagship"
+      >
+        👑 全专线旗舰
+      </button>
+      <button
+        type="button"
+        class="ladder-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:text-slate-900 hover:bg-slate-50"
+        data-filter="budget"
+      >
+        💰 高性价比
+      </button>
+      <button
+        type="button"
+        class="ladder-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:text-slate-900 hover:bg-slate-50"
+        data-filter="hys2"
+      >
+        ⚡ 低延迟/游戏
+      </button>
+      <button
+        type="button"
+        class="ladder-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:text-slate-900 hover:bg-slate-50"
+        data-filter="metered"
+      >
+        🧳 不限时按量
+      </button>
+      <button
+        type="button"
+        class="ladder-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 border border-slate-200 hover:text-slate-900 hover:bg-slate-50"
+        data-filter="business"
+      >
+        💼 商务外贸/AI
+      </button>
+    </div>
+
+    <!-- 关键词快速搜索 -->
+    <div class="relative w-full lg:w-72">
+      <input
+        type="text"
+        id="card-search-input"
+        placeholder="搜索梯子品牌、协议或特性..."
+        class="w-full bg-slate-50 text-slate-900 placeholder-slate-400 text-xs sm:text-sm rounded-xl px-3 py-2 pl-9 border border-slate-200 focus:bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+      />
+      <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
+    <span>💡 提示：支持按品牌名称、协议（VLESS/Hysteria2）及流媒体解锁快速筛选。</span>
+    <span class="font-mono text-sky-600 font-semibold" id="card-count-indicator">已展示全部 {LADDERS_DATA.length} 款梯子</span>
+  </div>
+</div>
+
+<!-- 梯子卡片展示区域 -->
+<div class="space-y-8">
+  <!-- 核心榜首独立展示 (隐形人) -->
+  <div id="featured-ladder-wrapper">
+    <div class="flex items-center space-x-2 mb-3">
+      <span class="text-xs font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200 flex items-center gap-1.5">
+        <span>👑</span> 2027 年度总榜第 1 名 · 极速旗舰首选
+      </span>
+      <span class="text-xs text-slate-500 hidden sm:inline">晚高峰零卡顿 · 顶级企业专线直达</span>
+    </div>
+    <LadderFeaturedCard ladder={top1Ladder} />
+  </div>
+
+  <!-- 其余品牌矩阵：一排五个网格框架 -->
+  <div id="grid-ladders-wrapper">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200">
+      <div class="flex items-center space-x-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-sky-700 bg-sky-50 px-3 py-1 rounded-full border border-sky-200">
+          更多精选梯子品牌（{otherLadders.length} 款）
+        </span>
+        <span class="text-xs text-slate-500 hidden sm:inline">一排 5 个精选网格矩阵 · 覆盖多价位与特需线路</span>
+      </div>
+      <span class="text-xs text-slate-500 font-mono">第 2 ~ {LADDERS_DATA.length} 名</span>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5" id="ladder-grid-container">
+      {otherLadders.map((ladder) => (
+        <LadderGridCard ladder={ladder} />
+      ))}
+    </div>
+  </div>
+</div>
+
+<!-- 多维筛选与即时搜索脚本 -->
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabButtons = document.querySelectorAll('.ladder-tab-btn');
+    const searchInput = document.getElementById('card-search-input');
+    const cards = document.querySelectorAll('[data-ladder-card]');
+    const countIndicator = document.getElementById('card-count-indicator');
+    const featuredWrapper = document.getElementById('featured-ladder-wrapper');
+    const gridWrapper = document.getElementById('grid-ladders-wrapper');
+
+    let currentFilter = 'all';
+    let currentQuery = '';
+
+    function filterCards() {
+      let visibleCount = 0;
+      let visibleGridCount = 0;
+      cards.forEach((card) => {
+        const cat = card.getAttribute('data-category') || '';
+        const keywords = card.getAttribute('data-keywords') || '';
+        const name = card.getAttribute('data-name') || '';
+
+        const matchFilter =
+          currentFilter === 'all' ||
+          cat === currentFilter ||
+          (currentFilter === 'budget' && cat === 'stable');
+        const matchQuery = !currentQuery || name.includes(currentQuery) || keywords.includes(currentQuery);
+
+        if (matchFilter && matchQuery) {
+          card.style.display = '';
+          visibleCount++;
+          if (gridWrapper && gridWrapper.contains(card)) {
+            visibleGridCount++;
+          }
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (featuredWrapper) {
+        const featuredCard = featuredWrapper.querySelector('[data-ladder-card]');
+        if (featuredCard) {
+          featuredWrapper.style.display = featuredCard.style.display === 'none' ? 'none' : '';
+        }
+      }
+
+      if (gridWrapper) {
+        gridWrapper.style.display = visibleGridCount === 0 ? 'none' : '';
+      }
+
+      if (countIndicator) {
+        countIndicator.innerText = `已筛选出 ${visibleCount} 款梯子`;
+      }
+    }
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        tabButtons.forEach((b) => {
+          b.classList.remove('bg-sky-500', 'text-white', 'shadow-md', 'shadow-sky-500/20');
+          b.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+        });
+        btn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+        btn.classList.add('bg-sky-500', 'text-white', 'shadow-md', 'shadow-sky-500/20');
+
+        currentFilter = btn.getAttribute('data-filter') || 'all';
+        filterCards();
+      });
+    });
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        currentQuery = e.target.value.toLowerCase().trim();
+        filterCards();
+      });
+    }
+  });
+</script>

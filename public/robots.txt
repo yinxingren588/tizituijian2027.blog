@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+Sitemap: https://tizituijian2027.blog/sitemap.xml
+Sitemap: https://tizituijian2027.blog/sitemap-index.xml

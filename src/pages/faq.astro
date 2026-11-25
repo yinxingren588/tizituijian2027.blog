@@ -1,0 +1,166 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { ALL_FAQS, FAQ_CATEGORIES } from '../data/faqs';
+import { formatFaqMarkdown } from '../utils/formatFaqMarkdown';
+import '../styles/global.css';
+
+const title = `2027梯子推荐常见疑问大全 (共 ${ALL_FAQS.length} 题分类解答) | tizituijian2027.blog`;
+const description = `全面汇总 ${ALL_FAQS.length} 道科学上网与Clash配置高频疑问：IPLC/IEPL专线原理、按量与包月对比、Node倍率陷阱、ChatGPT风控解决与Clash Verge Rev排障指南。`;
+const keywords = '梯子常见疑问, Clash FAQ, IPLC专线原理, 节点倍率, ChatGPT IP解封, DNS防污染';
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  'mainEntity': ALL_FAQS.slice(0, 20).map((faq) => ({
+    '@type': 'Question',
+    'name': faq.q,
+    'acceptedAnswer': {
+      '@type': 'Answer',
+      'text': faq.summary,
+    },
+  })),
+};
+
+const breadcrumbItems = [
+  { name: '常见疑问 FAQ', url: '/faq/' },
+];
+
+const categoryCounts = new Map<string, number>();
+for (const item of ALL_FAQS) {
+  categoryCounts.set(item.category, (categoryCounts.get(item.category) || 0) + 1);
+}
+---
+
+<BaseLayout title={title} description={description} keywords={keywords} schemaJson={faqSchema}>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumb items={breadcrumbItems} />
+
+    <header class="my-6 pb-6 border-b border-slate-200">
+      <span class="text-xs font-semibold uppercase tracking-wider text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+        百科与排障问答库 · 共 {ALL_FAQS.length} 篇深度解答
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mt-3">
+        2027 翻墙新手避坑与常见疑问大全 (FAQ)
+      </h1>
+      <p class="text-slate-600 text-sm sm:text-base mt-3 leading-relaxed">
+        整理了从选购专线梯子、按量与包月方案抉择、Clash Verge Rev 配置到 ChatGPT / Netflix 解锁排障的全部核心解答，每个问题均支持即时展开或打开独立详情专页！
+      </p>
+    </header>
+
+    <!-- 5 大分类导航筛选卡片 -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 mb-8" id="faq-category-tabs">
+      <button
+        type="button"
+        class="faq-cat-btn active p-3 rounded-xl text-left border transition-all bg-sky-500 text-white border-sky-500 shadow-sm"
+        data-faq-cat="all"
+      >
+        <div class="text-xs font-bold">🌟 全部问题</div>
+        <div class="text-[11px] opacity-90 font-mono mt-0.5">{ALL_FAQS.length} 题</div>
+      </button>
+      {FAQ_CATEGORIES.map((cat) => (
+        <button
+          type="button"
+          class="faq-cat-btn p-3 rounded-xl text-left border transition-all bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+          data-faq-cat={cat.name}
+        >
+          <div class="text-xs font-bold truncate" title={cat.name}>{cat.icon} {cat.name.replace('篇', '')}</div>
+          <div class="text-[11px] text-slate-500 font-mono mt-0.5">{categoryCounts.get(cat.name) || 0} 题</div>
+        </button>
+      ))}
+    </div>
+
+    <!-- 按分类展示全部 58 题 -->
+    <div class="space-y-10">
+      {FAQ_CATEGORIES.map((cat) => {
+        const items = ALL_FAQS.filter((item) => item.category === cat.name);
+        return (
+          <section class="faq-category-section space-y-4" data-faq-section={cat.name}>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-slate-200 pb-3">
+              <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                <span>{cat.icon}</span>
+                <span>{cat.name}</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200 font-mono">{items.length}</span>
+              </h2>
+              <span class="text-xs text-slate-500">{cat.description}</span>
+            </div>
+
+            <div class="space-y-3">
+              {items.map((faq) => (
+                <details class="group glass-card rounded-2xl p-5 transition-all duration-200 open:border-sky-400">
+                  <summary class="flex items-center justify-between cursor-pointer font-bold text-sm sm:text-base text-slate-900 group-hover:text-sky-600 transition-colors list-none">
+                    <span class="pr-4">{faq.q}</span>
+                    <span class="text-sky-600 text-xl font-mono transition-transform duration-200 group-open:rotate-45 shrink-0">+</span>
+                  </summary>
+                  <div class="mt-3 pt-3 border-t border-slate-100 text-xs sm:text-sm space-y-3">
+                    <div set:html={formatFaqMarkdown(faq.a)} />
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                      <div class="flex flex-wrap gap-1.5">
+                        {faq.tags.map((t) => (
+                          <span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                            #{t}
+                          </span>
+                        ))}
+                      </div>
+                      <a
+                        href={`/faq/${faq.slug}/`}
+                        class="text-xs font-bold text-sky-600 hover:text-sky-700 bg-sky-50 px-3 py-1 rounded-lg border border-sky-200"
+                      >
+                        打开独立专属问答页 →
+                      </a>
+                    </div>
+                  </div>
+                </details>
+              ))}
+            </div>
+          </section>
+        );
+      })}
+    </div>
+
+    <div class="mt-12 p-6 sm:p-8 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-4">
+      <h2 class="text-xl font-bold text-slate-900">看完原理准备选购高速稳定的专线梯子？</h2>
+      <p class="text-xs sm:text-sm text-slate-600 max-w-lg mx-auto">
+        前往《2027梯子推荐排行榜》挑选经过长期压测验证的品牌，并查看各家完整流量与年付优惠明细。
+      </p>
+      <div class="flex flex-wrap justify-center gap-3 pt-1">
+        <a
+          href="/ranking/"
+          class="px-6 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white shadow-md shadow-sky-500/20 transition-all"
+        >
+          查看 2027 梯子推荐榜 →
+        </a>
+        <a
+          href="/clients/"
+          class="px-6 py-2.5 rounded-xl font-bold text-sm bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 transition-colors"
+        >
+          下载客户端与查看配置教程 →
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const btns = document.querySelectorAll('.faq-cat-btn');
+      const sections = document.querySelectorAll('[data-faq-section]');
+
+      btns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const target = btn.getAttribute('data-faq-cat') || 'all';
+          btns.forEach((b) => {
+            b.classList.remove('bg-sky-500', 'text-white', 'border-sky-500', 'shadow-sm');
+            b.classList.add('bg-white', 'text-slate-700', 'border-slate-200');
+          });
+          btn.classList.remove('bg-white', 'text-slate-700', 'border-slate-200');
+          btn.classList.add('bg-sky-500', 'text-white', 'border-sky-500', 'shadow-sm');
+
+          sections.forEach((sec) => {
+            const name = sec.getAttribute('data-faq-section');
+            sec.style.display = target === 'all' || target === name ? '' : 'none';
+          });
+        });
+      });
+    });
+  </script>
+</BaseLayout>

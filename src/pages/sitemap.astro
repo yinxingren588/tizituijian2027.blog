@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { LADDERS_DATA } from '../data/ladders';
+import { ALL_FAQS, FAQ_CATEGORIES } from '../data/faqs';
+import { getCollection } from 'astro:content';
+import { CORE_SITEMAP_PAGES } from '../utils/sitemapMeta.mjs';
+import '../styles/global.css';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const totalUrls =
+  CORE_SITEMAP_PAGES.length +
+  LADDERS_DATA.length +
+  sortedPosts.length +
+  ALL_FAQS.length;
+
+const title = `网站地图 (Sitemap) - 全站 ${totalUrls} 个页面索引与快捷导航 | 2027梯子推荐`;
+const description = `2027梯子推荐官方博客全站地图，一站汇集全部 ${CORE_SITEMAP_PAGES.length} 个核心专题页、${LADDERS_DATA.length} 家品牌详评套餐页、${sortedPosts.length} 篇深度教程文章及 ${ALL_FAQS.length} 个疑难解答专页。`;
+const keywords = '网站地图, Sitemap, 2027梯子推荐目录, tizituijian2027.blog';
+
+const breadcrumbItems = [
+  { name: '网站地图 (Sitemap)', url: '/sitemap/' },
+];
+---
+
+<BaseLayout title={title} description={description} keywords={keywords}>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-12">
+    <Breadcrumb items={breadcrumbItems} />
+
+    <!-- 顶部总览与机器协议源 -->
+    <header class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-200">
+        <span>🗺️ 全站架构导航 · 共收录 {totalUrls} 个正式页面</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
+        2027梯子推荐 全站地图索引 (Sitemap)
+      </h1>
+      <p class="text-slate-600 text-sm sm:text-base max-w-3xl leading-relaxed">
+        本页面汇总了本站全部核心榜单专题、{LADDERS_DATA.length} 家专属品牌多档套餐评测页、{sortedPosts.length} 篇深度技术长文与 {ALL_FAQS.length} 个 FAQ 百科独立专页，方便访客快捷直达及搜索引擎爬虫抓取索引。
+      </p>
+
+      <!-- 机器协议文件链接 -->
+      <div class="flex flex-wrap items-center gap-2.5 pt-2 text-xs">
+        <span class="text-slate-500 font-semibold">机器协议源：</span>
+        <a
+          href="/sitemap.xml"
+          class="px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-sky-50 text-sky-700 border border-slate-200 hover:border-sky-300 font-mono font-semibold transition-colors"
+        >
+          📄 /sitemap.xml
+        </a>
+        <a
+          href="/sitemap-index.xml"
+          class="px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-sky-50 text-sky-700 border border-slate-200 hover:border-sky-300 font-mono font-semibold transition-colors"
+        >
+          📑 /sitemap-index.xml
+        </a>
+        <a
+          href="/robots.txt"
+          class="px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 font-mono font-semibold transition-colors"
+        >
+          🤖 /robots.txt
+        </a>
+        <a
+          href="/e9a8f273b1454c5e89d14f2a781290bc.txt"
+          class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-mono font-semibold transition-colors"
+        >
+          ⚡ Bing IndexNow 验证
+        </a>
+      </div>
+    </header>
+
+    <!-- 1. 核心栏目与独立专题页面 -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">
+          🏛️ 核心栏目与独立专题页面
+        </h2>
+        <span class="text-xs font-mono text-sky-700 bg-sky-50 px-2.5 py-1 rounded-full border border-sky-200">
+          {CORE_SITEMAP_PAGES.length} 个核心页面
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {CORE_SITEMAP_PAGES.map((page) => (
+          <a
+            href={page.path}
+            class="glass-card rounded-xl p-4 block hover:border-sky-400 transition-all group"
+          >
+            <div class="flex items-center justify-between gap-2 mb-1.5">
+              <span class="font-bold text-slate-900 group-hover:text-sky-600 transition-colors text-sm sm:text-base">
+                {page.title}
+              </span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200 font-semibold shrink-0">
+                {page.badge}
+              </span>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed mb-2">{page.desc}</p>
+            <div class="text-[11px] font-mono text-sky-600 font-semibold">{page.path} →</div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- 2. 全站 35 家精选品牌详评与套餐矩阵 -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">
+          🏆 35 款精选梯子详评与完整套餐页
+        </h2>
+        <span class="text-xs font-mono text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
+          {LADDERS_DATA.length} 家品牌专页
+        </span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+        {LADDERS_DATA.map((ladder) => (
+          <a
+            href={ladder.reviewSlug}
+            class="glass-card rounded-xl p-3.5 block hover:border-sky-400 transition-all group"
+          >
+            <div class="flex items-center justify-between gap-1 mb-1">
+              <span class="text-[11px] font-mono font-bold text-slate-500">#{ladder.rank}</span>
+              <span class="text-xs font-mono font-bold text-sky-600">{ladder.priceRaw || ladder.monthlyPrice.replace('/月起', '')}</span>
+            </div>
+            <div class="font-bold text-sm text-slate-900 group-hover:text-sky-600 truncate" title={ladder.name}>
+              {ladder.name}
+            </div>
+            <div class="text-[11px] text-slate-500 truncate mt-0.5">{ladder.traffic}</div>
+            <div class="text-[10px] text-sky-600 font-medium mt-1.5">
+              {ladder.packages.length} 档套餐详情 →
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- 3. 深度评测文章专栏 -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">
+          📰 深度评测与实操文章专栏
+        </h2>
+        <span class="text-xs font-mono text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+          {sortedPosts.length} 篇深度长文
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {sortedPosts.map((post) => (
+          <a
+            href={`/posts/${post.slug}/`}
+            class="glass-card rounded-xl p-4 flex items-center justify-between gap-4 hover:border-sky-400 transition-all group"
+          >
+            <div class="min-w-0">
+              <div class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-sky-600 truncate">
+                {post.data.title}
+              </div>
+              <div class="text-xs text-slate-500 font-mono mt-1">/posts/{post.slug}/</div>
+            </div>
+            <span class="text-sky-600 font-bold text-xs shrink-0">阅读 →</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- 4. 全站 58 个分类 FAQ 独立问答专页 -->
+    <section class="space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">
+          ❓ {ALL_FAQS.length} 个技术问答与疑难排查独立页面
+        </h2>
+        <span class="text-xs font-mono text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-200">
+          {ALL_FAQS.length} 篇独立解答
+        </span>
+      </div>
+
+      <div class="space-y-6">
+        {FAQ_CATEGORIES.map((cat) => {
+          const items = ALL_FAQS.filter((f) => f.category === cat.name);
+          return (
+            <div class="bg-white rounded-2xl p-5 border border-slate-200 space-y-3">
+              <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-2.5">
+                <span>{cat.icon}</span>
+                <span>{cat.name}</span>
+                <span class="text-xs font-mono text-sky-700 bg-sky-50 px-2 py-0.5 rounded-full border border-sky-200">
+                  {items.length} 篇
+                </span>
+              </h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                {items.map((faq) => (
+                  <a
+                    href={`/faq/${faq.slug}/`}
+                    class="p-3 rounded-lg bg-slate-50 hover:bg-sky-50 border border-slate-200/80 hover:border-sky-300 transition-colors flex items-center justify-between gap-2 group"
+                  >
+                    <span class="text-xs sm:text-sm font-medium text-slate-800 group-hover:text-sky-700 truncate">
+                      {faq.q}
+                    </span>
+                    <span class="text-[11px] font-mono text-slate-400 group-hover:text-sky-600 shrink-0">
+                      →
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  </div>
+</BaseLayout>

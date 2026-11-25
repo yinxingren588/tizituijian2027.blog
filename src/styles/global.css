@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  body {
+    @apply bg-white text-slate-800 antialiased selection:bg-sky-500 selection:text-white min-h-screen flex flex-col font-sans;
+    background-image: radial-gradient(rgba(14, 165, 233, 0.07) 1px, transparent 1px), radial-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: 0 0, 16px 16px;
+  }
+}
+
+/* 洁净亮色面板与卡片特效 */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
+}
+
+.glass-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 12px -2px rgba(15, 23, 42, 0.04);
+  transition: all 0.25s ease-in-out;
+}
+
+.glass-card:hover {
+  border-color: rgba(14, 165, 233, 0.45);
+  box-shadow: 0 12px 28px -6px rgba(14, 165, 233, 0.14);
+  transform: translateY(-2px);
+}
+
+/* 渐变文本高亮 (针对白色背景高对比度优化) */
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-600;
+}
+
+.gradient-badge {
+  @apply bg-amber-50 text-amber-700 border border-amber-200;
+}
+
+/* 一键复制反馈浮动提示动画 */
+.copy-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  background: #0284c7;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(2, 132, 199, 0.3);
+  animation: fadeInOut 2.5s forwards ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(10px); }
+  15% { opacity: 1; transform: translateY(0); }
+  85% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+/* 文章排版样式优化 (白色背景高可读性) */
+.prose-custom {
+  @apply text-slate-700 leading-relaxed;
+}
+
+.prose-custom h1,
+.prose-custom h2,
+.prose-custom h3,
+.prose-custom h4 {
+  @apply text-slate-900 font-bold tracking-tight mt-8 mb-4 scroll-mt-24;
+}
+
+.prose-custom h1 { @apply text-3xl border-b border-slate-200 pb-3; }
+.prose-custom h2 { @apply text-2xl border-b border-slate-200 pb-2 text-sky-700; }
+.prose-custom h3 { @apply text-xl text-sky-600; }
+
+.prose-custom p {
+  @apply my-4 leading-7 text-slate-700;
+}
+
+.prose-custom ul {
+  @apply list-disc list-inside my-4 space-y-2 text-slate-700 pl-2;
+}
+
+.prose-custom ol {
+  @apply list-decimal list-inside my-4 space-y-2 text-slate-700 pl-2;
+}
+
+.prose-custom blockquote {
+  @apply border-l-4 border-sky-500 pl-4 py-2 my-4 bg-sky-50 rounded-r text-sky-900 italic;
+}
+
+.prose-custom a {
+  @apply text-sky-600 hover:text-sky-700 underline underline-offset-4 decoration-sky-500/40 hover:decoration-sky-600 transition-colors;
+}
+
+.prose-custom table {
+  @apply w-full text-left border-collapse my-6 text-sm overflow-x-auto block md:table;
+}
+
+.prose-custom th {
+  @apply bg-slate-100 text-slate-800 font-semibold p-3 border border-slate-200;
+}
+
+.prose-custom td {
+  @apply p-3 border border-slate-200 bg-white text-slate-700;
+}
+
+.prose-custom code:not(pre code) {
+  @apply bg-slate-100 text-sky-700 px-1.5 py-0.5 rounded text-xs font-mono border border-slate-200;
+}

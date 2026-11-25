@@ -1,0 +1,313 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RankingSection from '../components/RankingSection.astro';
+import ComparisonTable from '../components/ComparisonTable.astro';
+import ScenariosSection from '../components/ScenariosSection.astro';
+import ClientsSection from '../components/ClientsSection.astro';
+import FaqSection from '../components/FaqSection.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import { LADDERS_DATA } from '../data/ladders';
+import { FAQS_DATA } from '../data/faqs';
+import { getCollection } from 'astro:content';
+import '../styles/global.css';
+
+// 获取所有已发布的博客文章并按日期倒序
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// 首页核心 SEO 元素
+const title = '2027梯子推荐 - 最新稳定好用的高速科学上网梯子测评与翻墙机场排行榜';
+const description = '2027梯子推荐官方测评博客（tizituijian2027.blog），专注于2027年最新稳定、高速防封锁的科学上网梯子与翻墙代理节点排行榜。精选全IEPL内网专线梯子、4K/8K视频秒开节点、ChatGPT/TikTok解锁住宅IP、电脑与手机梯子软件下载及小白一键配置教程。';
+const keywords = '2027梯子推荐, 梯子推荐, 2027科学上网, 翻墙梯子, 稳定好用的梯子, 电脑梯子软件, 手机梯子, 高速梯子, IPLC专线梯子, Clash梯子, Sing-box订阅, ChatGPT梯子, 便宜梯子, tizituijian2027.blog';
+
+// Schema.org: ItemList (用于梯子排行榜)
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  'name': '2027梯子推荐排行榜',
+  'description': '2027年度最佳稳定高速科学上网梯子与翻墙代理服务测评榜单',
+  'itemListOrder': 'https://schema.org/ItemListOrderDescending',
+  'numberOfItems': LADDERS_DATA.length,
+  'itemListElement': LADDERS_DATA.map((item) => ({
+    '@type': 'ListItem',
+    'position': item.rank,
+    'name': item.name,
+    'description': item.summary,
+    'url': `https://tizituijian2027.blog/ranking/`,
+  })),
+};
+
+// Schema.org: FAQPage (使 Bing 搜索展现富文本折叠问答)
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  'mainEntity': FAQS_DATA.map((faq) => ({
+    '@type': 'Question',
+    'name': faq.question,
+    'acceptedAnswer': {
+      '@type': 'Answer',
+      'text': faq.answer,
+    },
+  })),
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  schemaJson={[itemListSchema, faqSchema]}
+>
+  <!-- Hero 英雄区域 -->
+  <section class="text-center pt-8 pb-14 sm:pt-14 sm:pb-20 relative overflow-hidden">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <!-- 状态指示条 -->
+      <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-200 mb-6 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>2027 年度最新实测发布 · 真实多省市晚高峰压测数据</span>
+      </div>
+
+      <!-- 核心 H1 标题：严格匹配目标搜索关键词 "2027梯子推荐" -->
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight max-w-4xl mx-auto mb-6">
+        2027梯子推荐
+        <span class="block mt-2 text-2xl sm:text-4xl lg:text-5xl font-extrabold gradient-text">
+          稳定、高速、防封锁科学上网梯子指南
+        </span>
+      </h1>
+
+      <!-- 首段包含丰富关键词，满足 Bing 算法首屏权重 -->
+      <p class="text-slate-600 text-sm sm:text-base lg:text-lg max-w-3xl mx-auto leading-relaxed mb-8">
+        欢迎来到 <strong class="text-sky-600">2027梯子推荐</strong> 官方测评博客！无论您需要电脑手机科学上网梯子软件、外贸办公专用线路，还是晚高峰 4K/8K 视频秒开、ChatGPT/Claude 原生解锁的稳定梯子节点，本站均基于全国内地多运营商真实晚高峰实测数据，为您严选不跑路的高性价比优质梯子。
+      </p>
+
+      <!-- 快捷行动入口 -->
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a
+          href="/ranking/"
+          class="px-7 py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white shadow-lg shadow-sky-500/25 transition-transform hover:scale-105"
+        >
+          🔥 查看 2027 梯子推荐榜单 →
+        </a>
+        <a
+          href="/comparison/"
+          class="px-6 py-3.5 rounded-xl font-bold text-sm bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-sm transition-all hover:scale-105"
+        >
+          📊 参数对比表格
+        </a>
+        <a
+          href="/clients/"
+          class="px-6 py-3.5 rounded-xl font-bold text-sm bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200 shadow-sm transition-all"
+        >
+          📱 客户端下载教程
+        </a>
+      </div>
+
+      <!-- 站点关键实测数据标签看板 -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto mt-12 pt-8 border-t border-slate-200 text-left">
+        <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+          <div class="text-xs text-slate-500">线路架构类型</div>
+          <div class="text-base sm:text-lg font-bold text-slate-900 mt-1">全 IEPL / IPLC 专线</div>
+        </div>
+        <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+          <div class="text-xs text-slate-500">主流协议兼容</div>
+          <div class="text-base sm:text-lg font-bold text-sky-600 mt-1">VLESS / Trojan / Hys2</div>
+        </div>
+        <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+          <div class="text-xs text-slate-500">流媒体 & AI解锁</div>
+          <div class="text-base sm:text-lg font-bold text-emerald-600 mt-1">原生双 ISP 家宽纯净 IP</div>
+        </div>
+        <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+          <div class="text-xs text-slate-500">晚高峰实测均速</div>
+          <div class="text-base sm:text-lg font-bold text-amber-600 mt-1">850+ Mbps 超低延迟</div>
+        </div>
+      </div>
+
+      <!-- 2027 今日晚高峰主干网测速雷达看板 -->
+      <div class="p-5 rounded-2xl bg-white border border-sky-200 shadow-sm max-w-4xl mx-auto mt-8 text-left">
+        <div class="flex flex-wrap items-center justify-between pb-3 mb-3 border-b border-slate-100 gap-2">
+          <div class="flex items-center space-x-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+            <span class="text-xs font-bold text-slate-900 uppercase tracking-wider">2027 今日晚高峰全国主干网压测实时状态看板</span>
+          </div>
+          <span class="text-xs text-sky-600 font-mono font-medium">物理探针：广深/沪苏/京津 BGP 出口专线</span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <div class="text-slate-600">中国电信 (1000M)</div>
+            <div class="text-emerald-600 font-bold mt-1 text-sm">99.8% 在线 / 24ms</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">晚高峰 4K 零卡顿</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <div class="text-slate-600">中国联通 (1000M)</div>
+            <div class="text-emerald-600 font-bold mt-1 text-sm">99.9% 在线 / 21ms</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">国际专线直通车</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <div class="text-slate-600">中国移动 (500M)</div>
+            <div class="text-sky-600 font-bold mt-1 text-sm">99.6% 在线 / 29ms</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">Hysteria2 弱网加速</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <div class="text-slate-600">全内网专线丢包率</div>
+            <div class="text-amber-600 font-bold mt-1 text-sm">&lt; 0.5% 极致平稳</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">100% 免疫公网拦截</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 space-y-24 pb-20">
+    <!-- 板块 1：2027 梯子推荐排行榜 -->
+    <section id="ranking" class="scroll-mt-24">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4 border-b border-slate-200 pb-5">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-sky-700 bg-sky-50 px-3 py-1 rounded-full border border-sky-200">
+            核心推荐排行榜
+          </span>
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-3">
+            2027 梯子推荐排行榜 · 精选优质稳定高速科学上网梯子
+          </h2>
+          <p class="text-slate-600 text-sm sm:text-base mt-2">
+            综合全国电信、联通、移动多网络环境下 20:00-23:00 晚高峰实测速度、丢包率与抗封锁表现严选。
+          </p>
+        </div>
+
+        <div class="flex items-center gap-4 shrink-0">
+          <span class="text-xs text-slate-500 font-mono">🕒 测评周期：每日巡检 · 每周重新测速</span>
+          <a href="/ranking/" class="text-xs font-bold text-sky-600 hover:text-sky-700">独立榜单页 →</a>
+        </div>
+      </div>
+
+      <RankingSection />
+    </section>
+
+    <!-- 板块 2：梯子核心参数与测速横向对比 -->
+    <section id="comparison" class="scroll-mt-24">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-3">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+            深度对比
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3">
+            2027 主流科学上网梯子核心参数与测速横向对比表
+          </h2>
+          <p class="text-slate-600 text-sm mt-1">
+            一览各梯子的专线类型、晚高峰实测带宽、解锁支持与起步资费，助您快速做出最合理的决策。
+          </p>
+        </div>
+        <a href="/comparison/" class="text-xs sm:text-sm text-sky-600 hover:text-sky-700 font-semibold shrink-0">
+          进入参数对比专页 →
+        </a>
+      </div>
+
+      <ComparisonTable />
+    </section>
+
+    <!-- 板块 3：多场景梯子挑选指南 -->
+    <section id="scenarios" class="scroll-mt-24">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-3">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200">
+            按需选择
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3">
+            不同使用场景下，如何挑选最适合您的 2027 梯子？
+          </h2>
+          <p class="text-slate-600 text-sm mt-1">
+            并非价格越高越好，根据自身的使用频率与核心需求选择才能达到最高性价比。
+          </p>
+        </div>
+        <a href="/scenarios/" class="text-xs sm:text-sm text-sky-600 hover:text-sky-700 font-semibold shrink-0">
+          查看完整选梯攻略 →
+        </a>
+      </div>
+
+      <ScenariosSection />
+    </section>
+
+    <!-- 板块 4：全平台梯子客户端推荐与配置指引 -->
+    <section id="clients" class="scroll-mt-24">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-3">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-cyan-700 bg-cyan-50 px-3 py-1 rounded-full border border-cyan-200">
+            客户端指引
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3">
+            2027 全平台梯子客户端软件推荐与快速配置
+          </h2>
+          <p class="text-slate-600 text-sm mt-1">
+            只需简单两步：① 下载对应平台客户端；② 将梯子服务商提供的订阅链接粘贴导入即可开启科学上网。
+          </p>
+        </div>
+        <a href="/clients/" class="text-xs sm:text-sm text-sky-600 hover:text-sky-700 font-semibold shrink-0">
+          查看详细安装教程 →
+        </a>
+      </div>
+
+      <ClientsSection />
+    </section>
+
+    <!-- 板块 5：常见疑问 FAQ -->
+    <section id="faq" class="scroll-mt-24">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-3">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+            疑难解答
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3">
+            2027 梯子推荐常见问题与防坑指南 (FAQ)
+          </h2>
+          <p class="text-slate-600 text-sm mt-1">
+            整理了网友关于梯子选购、晚高峰卡顿、ChatGPT 无法访问、排障教程等最关心的核心问题。
+          </p>
+        </div>
+        <a href="/faq/" class="text-xs sm:text-sm text-sky-600 hover:text-sky-700 font-semibold shrink-0">
+          打开 FAQ 百科专页 →
+        </a>
+      </div>
+
+      <FaqSection />
+
+      <div class="mt-6 text-center">
+        <a
+          href="/faq/"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 transition-colors"
+        >
+          <span>📚 查看全部 58 道分类百科问答与排障指南</span>
+          <span>→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 板块 6：最新评测文章 -->
+    <section class="scroll-mt-24">
+      <div class="flex items-center justify-between mb-8 border-b border-slate-200 pb-4">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-sky-700 bg-sky-50 px-3 py-1 rounded-full border border-sky-200">
+            深度干货
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">
+            2027 梯子深度评测与实操教程
+          </h2>
+        </div>
+        <a href="/posts/" class="text-xs sm:text-sm text-sky-600 hover:text-sky-700 font-semibold">
+          查看全部文章 →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {sortedPosts.slice(0, 3).map((post) => (
+          <ArticleCard
+            title={post.data.title}
+            description={post.data.description}
+            pubDate={post.data.pubDate}
+            slug={post.slug}
+            author={post.data.author}
+            tags={post.data.tags}
+          />
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>

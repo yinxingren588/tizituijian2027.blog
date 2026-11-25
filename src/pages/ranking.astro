@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import RankingSection from '../components/RankingSection.astro';
+import { LADDERS_DATA } from '../data/ladders';
+import '../styles/global.css';
+
+const title = '2027梯子推荐排行榜 - 35款稳定高速科学上网梯子实测总榜 | tizituijian2027.blog';
+const description = '2027梯子推荐官方总榜，基于全国电信、联通、移动晚高峰 20:00-23:00 真实压测速率与丢包率排名，收录隐形人、暮光加速、微风网络、飞猫云、大佬云等35款高速防封锁梯子。';
+const keywords = '2027梯子推荐, 梯子排行榜, 稳定高速梯子, IEPL专线梯子, 科学上网机场榜单, tizituijian2027.blog';
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  'name': '2027梯子推荐排行榜',
+  'description': description,
+  'itemListOrder': 'https://schema.org/ItemListOrderDescending',
+  'numberOfItems': LADDERS_DATA.length,
+  'itemListElement': LADDERS_DATA.map((item) => ({
+    '@type': 'ListItem',
+    'position': item.rank,
+    'name': item.name,
+    'description': item.summary,
+    'url': 'https://tizituijian2027.blog/ranking/',
+  })),
+};
+
+const breadcrumbItems = [
+  { name: '梯子推荐榜', url: '/ranking/' },
+];
+---
+
+<BaseLayout title={title} description={description} keywords={keywords} schemaJson={itemListSchema}>
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumb items={breadcrumbItems} />
+
+    <header class="my-6 pb-6 border-b border-slate-200 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div>
+        <span class="text-xs font-semibold uppercase tracking-wider text-sky-700 bg-sky-50 px-3 py-1 rounded-full border border-sky-200">
+          2027 核心总榜
+        </span>
+        <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mt-3">
+          2027 梯子推荐排行榜
+        </h1>
+        <p class="text-slate-600 text-sm sm:text-base mt-3 max-w-3xl leading-relaxed">
+          综合全国电信、联通、移动多网络环境下 20:00-23:00 晚高峰实测速度、SLA 在线率与流媒体/AI 原生解锁表现，严选全部 {LADDERS_DATA.length} 款优质稳定梯子品牌。
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-2 shrink-0">
+        <a
+          href="/comparison/"
+          class="px-4 py-2 rounded-xl text-xs font-bold bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-sm transition-colors"
+        >
+          📊 横向参数对比表 →
+        </a>
+        <a
+          href="/scenarios/"
+          class="px-4 py-2 rounded-xl text-xs font-bold bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 transition-colors"
+        >
+          🎯 按场景选梯攻略 →
+        </a>
+      </div>
+    </header>
+
+    <RankingSection />
+  </div>
+</BaseLayout>

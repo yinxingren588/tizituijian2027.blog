@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import ComparisonTable from '../components/ComparisonTable.astro';
+import '../styles/global.css';
+
+const title = '2027梯子核心参数与晚高峰测速横向对比表 | tizituijian2027.blog';
+const description = '2027梯子推荐横向参数对比专页，全面对比35款热门科学上网梯子的IEPL/IPLC专线类型、晚高峰实测Mbps带宽、延迟、流媒体与ChatGPT解锁能力及月付门槛。';
+const keywords = '2027梯子参数对比, 梯子测速对比表, IEPL专线对比, ChatGPT梯子解锁对比, tizituijian2027.blog';
+
+const breadcrumbItems = [
+  { name: '参数对比表', url: '/comparison/' },
+];
+---
+
+<BaseLayout title={title} description={description} keywords={keywords}>
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumb items={breadcrumbItems} />
+
+    <header class="my-6 pb-6 border-b border-slate-200 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div>
+        <span class="text-xs font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+          全维度数据横评
+        </span>
+        <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mt-3">
+          2027 梯子核心参数与测速横向对比表
+        </h1>
+        <p class="text-slate-600 text-sm sm:text-base mt-3 max-w-3xl leading-relaxed">
+          一眼看清各款梯子的专线架构、晚高峰峰值带宽、端到端延迟、主流协议支持、流媒体与 AI 解锁及起步价格，支持即时关键词过滤检索。
+        </p>
+      </div>
+
+      <a
+        href="/ranking/"
+        class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white shadow-md shadow-sky-500/20 transition-all shrink-0 text-center"
+      >
+        查看梯子推荐总榜 →
+      </a>
+    </header>
+
+    <!-- 测速指标说明条 -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+        <div class="text-xs font-bold text-sky-700 mb-1">⚡ IEPL / IPLC 物理专线</div>
+        <p class="text-xs text-slate-600 leading-relaxed">走运营商物理内网跨境出口，完全不过 GFW 公网阻断节点，晚高峰丢包率低于 0.8%。</p>
+      </div>
+      <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+        <div class="text-xs font-bold text-emerald-700 mb-1">📺 原生双 ISP 纯净解锁</div>
+        <p class="text-xs text-slate-600 leading-relaxed">实时探测 Netflix 4K、Disney+、ChatGPT 4o 及 Claude 3.5 的 IP 风控状态，剔除失效节点。</p>
+      </div>
+      <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+        <div class="text-xs font-bold text-amber-700 mb-1">📊 三网晚高峰压测口径</div>
+        <p class="text-xs text-slate-600 leading-relaxed">所有带宽数值均于每晚 20:00 - 23:00 在电信/联通千兆、移动 500M 探针下实测得出。</p>
+      </div>
+    </div>
+
+    <ComparisonTable />
+  </div>
+</BaseLayout>

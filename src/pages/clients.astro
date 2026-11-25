@@ -1,0 +1,112 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import ClientsSection from '../components/ClientsSection.astro';
+import '../styles/global.css';
+
+const title = '2027全平台梯子客户端软件官方下载与Clash Verge Rev保姆级配置教程 | tizituijian2027.blog';
+const description = '只提供官方开源 GitHub Releases 及 App Store 正规客户端下载渠道，含 Windows、Mac、iOS 小火箭及 Android 安卓四步保姆级配置教程与 TUN 模式开启方法。';
+const keywords = 'Clash Verge Rev下载, Mihomo Party下载, Shadowrocket小火箭下载, Clash配置教程, Sing-box教程, TUN模式开启';
+
+const breadcrumbItems = [
+  { name: '客户端配置', url: '/clients/' },
+];
+---
+
+<BaseLayout title={title} description={description} keywords={keywords}>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumb items={breadcrumbItems} />
+
+    <header class="my-6 pb-6 border-b border-slate-200">
+      <span class="text-xs font-semibold uppercase tracking-wider text-cyan-700 bg-cyan-50 px-3 py-1 rounded-full border border-cyan-200">
+        全平台官方下载与接入指引
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mt-3">
+        2027 主流 Clash / 代理客户端官方下载与保姆级教程
+      </h1>
+      <p class="text-slate-600 text-sm sm:text-base mt-3 max-w-3xl leading-relaxed">
+        本站只提供官方开源 GitHub Releases 及 App Store 正规下载渠道，杜绝任何第三方修改版病毒或木马后门风险。以下同时附上 Windows / macOS 通用保姆级 4 步上手指南。
+      </p>
+    </header>
+
+    <ClientsSection />
+
+    <!-- Clash Verge Rev 保姆级 4 步详细上手教程 -->
+    <div class="mt-14 p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+        <div>
+          <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-0.5 rounded border border-sky-200">📚 新手必备保姆级教程</span>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
+            Clash Verge Rev 完整上手配置教程 (Win / Mac / Linux 通用)
+          </h2>
+        </div>
+        <a
+          href="/posts/windows-mac-ios-android-tizi-tutorial/"
+          class="text-xs sm:text-sm font-semibold text-sky-600 hover:text-sky-700 shrink-0"
+        >
+          查看全平台图文进阶指南 →
+        </a>
+      </div>
+
+      <p class="text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-200">
+        由于原 Clash for Windows 作者已停更，目前开源社区最推荐替代品为 <strong class="text-slate-900">Clash Verge Rev</strong>（基于 Tauri + Mihomo 内核开发，内存占用极低、原生中文界面且支持虚拟网卡 TUN 模式）。
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-sky-500 text-white font-black flex items-center justify-center text-xs">1</span>
+            <h3 class="font-bold text-slate-900">下载并安装官方原版客户端</h3>
+          </div>
+          <ul class="text-xs sm:text-sm text-slate-600 space-y-1.5 pl-2 list-disc list-inside leading-relaxed">
+            <li><strong class="text-slate-800">Windows 用户：</strong>下载结尾为 <code class="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-sky-700 font-mono text-xs">x64-setup.exe</code> 的安装程序；</li>
+            <li><strong class="text-slate-800">Mac (M1/M2/M3/M4 芯片)：</strong>下载 <code class="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-sky-700 font-mono text-xs">aarch64.dmg</code>；</li>
+            <li><strong class="text-slate-800">Mac (Intel 芯片)：</strong>下载 <code class="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-sky-700 font-mono text-xs">x64.dmg</code>。</li>
+          </ul>
+        </div>
+
+        <div class="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-sky-500 text-white font-black flex items-center justify-center text-xs">2</span>
+            <h3 class="font-bold text-slate-900">在机场后台复制订阅链接</h3>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            登录在 <a href="/ranking/" class="text-sky-600 underline font-medium">2027 梯子推荐总榜</a> 开通的机场管理面板（如隐形人、暮光加速或微风网络），在【仪表盘 / 我的订阅】点击【复制 Clash 订阅链接】（以 <code class="bg-white px-1 rounded border border-slate-200 text-xs">https://...</code> 开头）或直接点【一键导入】。
+          </p>
+        </div>
+
+        <div class="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-sky-500 text-white font-black flex items-center justify-center text-xs">3</span>
+            <h3 class="font-bold text-slate-900">导入订阅至 Clash Verge Rev</h3>
+          </div>
+          <ol class="text-xs sm:text-sm text-slate-600 space-y-1.5 pl-2 list-decimal list-inside leading-relaxed">
+            <li>打开 Clash Verge Rev，在左侧菜单栏点击【配置 / Profiles】；</li>
+            <li>在顶部输入框粘贴订阅链接并点击【导入 / Download】；</li>
+            <li>拉取完成后点击选中该配置卡片使其高亮设为活跃配置。</li>
+          </ol>
+        </div>
+
+        <div class="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-emerald-500 text-white font-black flex items-center justify-center text-xs">4</span>
+            <h3 class="font-bold text-slate-900">测速选线并开启规则分流</h3>
+          </div>
+          <ol class="text-xs sm:text-sm text-slate-600 space-y-1.5 pl-2 list-decimal list-inside leading-relaxed">
+            <li>点击【代理 / Proxies】，出站模式选择 <strong class="text-slate-900">规则 (Rule)</strong>（国内直连不费流量）；</li>
+            <li>点击 ⚡ 闪电图标批量测速，选中绿色低延迟节点（如香港/沪日 IPLC）；</li>
+            <li>打开左下角 <strong class="text-slate-900">【系统代理 / System Proxy】</strong> 开关即可秒开外网！</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- 进阶 TUN 模式提示 -->
+      <div class="p-5 rounded-xl bg-sky-50 border border-sky-200 space-y-2">
+        <div class="text-sm font-bold text-sky-900">💡 进阶技巧：开启 TUN 模式（虚拟网卡全量加速）</div>
+        <p class="text-xs sm:text-sm text-sky-800 leading-relaxed">
+          如果您发现命令行终端（<code class="bg-white px-1 rounded text-xs">git</code> / <code class="bg-white px-1 rounded text-xs">npm</code> / <code class="bg-white px-1 rounded text-xs">docker</code>）、外服游戏（Steam / Valorant）或 UWP 应用无法走代理，可在 Clash Verge Rev 设置中安装服务模式并开启 <strong>TUN 模式</strong>，系统将虚拟出专用网卡自动接管全机流量智能分流。
+        </p>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

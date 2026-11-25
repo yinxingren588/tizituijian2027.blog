@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/global.css';
+
+const title = '页面未找到 (404) | 2027梯子推荐';
+const description = '抱歉，您访问的页面不存在或已被移动。请返回 2027梯子推荐 首页查看最新科学上网梯子排行榜。';
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="max-w-2xl mx-auto px-4 py-20 text-center">
+    <div class="text-7xl font-black text-sky-600 mb-4">404</div>
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-4">
+      抱歉，您访问的页面不存在或已被移除
+    </h1>
+    <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-8">
+      您可能输入了错误的网址，或者该文章已更新并更换了链接。您可以直接返回首页查阅最新的 2027 优质梯子推荐榜单。
+    </p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a
+        href="/"
+        class="px-6 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white shadow-lg shadow-sky-500/20 transition-transform hover:scale-105"
+      >
+        返回博客首页
+      </a>
+      <a
+        href="/ranking/"
+        class="px-6 py-3 rounded-xl font-bold text-sm bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-sm transition-colors"
+      >
+        查看 2027 梯子推荐榜
+      </a>
+    </div>
+  </div>
+</BaseLayout>

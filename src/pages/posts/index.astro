@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { getCollection } from 'astro:content';
+import { SITE_CONFIG } from '../../data/site';
+import '../../styles/global.css';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const title = '2027梯子深度评测与实操教程专栏 | tizituijian2027.blog';
+const description = '精选2027年最新科学上网梯子测评、IEPL内网专线深度对比、翻墙避坑指南及Windows/Mac/iOS/Android全平台客户端配置实战教程。';
+const keywords = '2027梯子评测, 梯子推荐教程, Clash配置, Shadowrocket小火箭, 翻墙避坑, IPLC专线解析';
+
+const breadcrumbItems = [
+  { name: '评测文章专栏', url: '/posts/' },
+];
+---
+
+<BaseLayout title={title} description={description} keywords={keywords}>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <Breadcrumb items={breadcrumbItems} />
+
+    <header class="my-6 pb-6 border-b border-slate-200">
+      <div class="inline-flex items-center space-x-2 text-xs font-semibold text-sky-700 bg-sky-50 px-3 py-1 rounded-full border border-sky-200 mb-3">
+        <span>📚 科学上网知识库</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
+        2027 梯子评测与技术教程
+      </h1>
+      <p class="text-slate-600 text-sm sm:text-base mt-3 max-w-2xl leading-relaxed">
+        涵盖梯子选购避坑原则、协议性能对比、跨国网络延迟测速分析与各大客户端工具详细配置指引，助您轻松驾驭全球互联网。
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-10">
+      {sortedPosts.map((post) => (
+        <ArticleCard
+          title={post.data.title}
+          description={post.data.description}
+          pubDate={post.data.pubDate}
+          slug={post.slug}
+          author={post.data.author}
+          tags={post.data.tags}
+        />
+      ))}
+    </div>
+
+    <!-- 底部回到榜单 CTA -->
+    <div class="mt-16 p-8 rounded-2xl glass-panel border border-slate-200 text-center">
+      <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mb-2">
+        寻找经过多轮晚高峰实测的稳定好用梯子？
+      </h2>
+      <p class="text-slate-600 text-sm max-w-lg mx-auto mb-6">
+        直接查看我们在首页整理的 2027 年度精选稳定高速梯子排行榜，全专线支持，4K 秒开。
+      </p>
+      <a
+        href="/ranking/"
+        class="inline-block px-7 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white shadow-lg shadow-sky-500/20 transition-transform hover:scale-105"
+      >
+        查看 2027 梯子排行榜 →
+      </a>
+    </div>
+  </div>
+</BaseLayout>
