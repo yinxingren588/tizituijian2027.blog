@@ -1,0 +1,80 @@
+name: Deploy tizituijian2027.blog to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Astro Static Site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static site
+        run: npm run build
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  indexnow:
+    name: Submit Sitemap to Bing IndexNow
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies & build sitemap
+        run: npm ci && npm run build
+
+      - name: Submit URLs to Bing IndexNow when live
+        run: |
+          KEY_URL="https://tizituijian2027.blog/e9a8f273b1454c5e89d14f2a781290bc.txt"
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$KEY_URL" || echo "000")
+          if [ "$STATUS" = "200" ]; then
+            node tools/submit-indexnow.mjs
+          else
+            echo "域名 DNS 或 GitHub Pages 绑定尚未生效 (HTTP $STATUS)，待 https://tizituijian2027.blog/ 可访问后可手动 Run workflow 或运行 npm run indexnow。"
+          fi
